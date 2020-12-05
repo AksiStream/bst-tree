@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class BinarySearchTree <T extends Comparable> {
+public class BinarySearchTree<T extends Comparable> {
 
     Node root;
 
@@ -50,7 +50,7 @@ public class BinarySearchTree <T extends Comparable> {
     public Node findNode(T key) {
         Node node = root;
         while (node.key != key) {
-            if (key.compareTo(node.key)==-1) {
+            if (key.compareTo(node.key) == -1) {
                 node = node.left;
             } else {
                 node = node.right;
@@ -68,8 +68,9 @@ public class BinarySearchTree <T extends Comparable> {
             Node node = root;
             Node parent;
             while (true) {
+                newNode.height++;
                 parent = node;
-                if (key.compareTo(node.key)==-1) {
+                if (key.compareTo(node.key) == -1) {
                     node = node.left;
                     if (node == null) {
                         parent.left = newNode;
@@ -95,7 +96,7 @@ public class BinarySearchTree <T extends Comparable> {
 
         while (!node.key.equals(key)) {
             parent = node;
-            if (key.compareTo(node.key)==-1) {
+            if (key.compareTo(node.key) == -1) {
                 isLeft = true;
                 node = node.left;
             } else {
@@ -128,6 +129,7 @@ public class BinarySearchTree <T extends Comparable> {
 
         return true;
     }
+
     public Node getReplacementNode(Node replacedNode) {
         Node replacementParent = replacedNode;
         Node replacement = replacedNode;
@@ -145,7 +147,8 @@ public class BinarySearchTree <T extends Comparable> {
     }
 
     //обход дерева по схеме LRN (обратный обход)
-    public void postOrderTraverseTree() {
+    public Stack postOrderTraverseTree() {
+        Stack<Node> postOrder = new Stack<>();
         Node node = root;
         Stack<Node> stack = new Stack<>();
         while (true) {
@@ -154,22 +157,41 @@ public class BinarySearchTree <T extends Comparable> {
                 stack.push(node);
                 node = node.left;
             }
-            if (stack.empty()) return;
+            if (stack.empty()) return postOrder;
             node = stack.pop();
             if (!stack.empty() && stack.peek() == node) node = node.right;
             else {
-                System.out.print(" " + node.key);
+                postOrder.push(node);
                 node = null;
             }
+
         }
     }
 
     //вывод структуры дерева на экран
+    public String print() {
+        if (isEmpty()) {
+            return "Дерево пустое.";
+        }
+        StringBuilder sb = new StringBuilder();
+        Stack<Node> postOrder = postOrderTraverseTree();
 
+        sb.append(postOrder.pop());
+        sb.append("\n");
+
+        while (!postOrder.isEmpty()) {
+            for (int i = 0; i < postOrder.peek().height-1; i++)
+                sb.append("   ");
+            sb.append("└──");
+            sb.append(postOrder.pop());
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 
     //объединение двух поддеревьев (рекурсивная форма)
-    public Node push(Node root, Node head)
-    {
+    public Node push(Node root, Node head) {
         // insert the given node at the front of the DDL
         root.right = head;
 
@@ -183,8 +205,8 @@ public class BinarySearchTree <T extends Comparable> {
         head = root;
         return head;
     }
-    public Node convertBSTtoDLL(Node root, Node head)
-    {
+
+    public Node convertBSTtoDLL(Node root, Node head) {
         // Base case
         if (root == null) {
             return head;
@@ -201,8 +223,8 @@ public class BinarySearchTree <T extends Comparable> {
 
         return head;
     }
-    public Node mergeDDLs(Node a, Node b)
-    {
+
+    public Node mergeDDLs(Node a, Node b) {
         // if the first list is empty, return the second list
         if (a == null) {
             return b;
@@ -214,7 +236,7 @@ public class BinarySearchTree <T extends Comparable> {
         }
 
         // if head node of the first list is smaller
-        if (a.key.compareTo(b.key)==-1) {
+        if (a.key.compareTo(b.key) == -1) {
             a.right = mergeDDLs(a.right, b);
             a.right.left = a;
             return a;
@@ -227,8 +249,8 @@ public class BinarySearchTree <T extends Comparable> {
             return b;
         }
     }
-    public Node merge(Node a, Node b)
-    {
+
+    public Node merge(Node a, Node b) {
         Node first = null;
         first = convertBSTtoDLL(a, first);
 

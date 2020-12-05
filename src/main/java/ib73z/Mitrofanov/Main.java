@@ -1,5 +1,6 @@
 package ib73z.Mitrofanov;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -39,17 +40,11 @@ public class Main {
     public static void main(String[] args) {
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 
-        bst.addNode(20);
-        bst.addNode(10);
-        bst.addNode(30);
-        bst.addNode(25);
-        bst.addNode(100);
+        randomFill(bst, 20);
 
         BinarySearchTree<Integer> bst2 = new BinarySearchTree<>();
 
-        bst2.addNode(50);
-        bst2.addNode(5);
-        bst2.addNode(70);
+        defaultFill(bst2);
 
         Scanner menu = new Scanner(System.in);
 
@@ -95,9 +90,7 @@ public class Main {
                     break;
                 case 7:
                     //обход дерева по схеме LRN (обратный обход)
-                    System.out.print("Обход дерева по схеме LRN (обратный обход): ");
-                    bst.postOrderTraverseTree();
-                    System.out.println();
+                    System.out.println("Обход дерева по схеме LRN (обратный обход):" + bst.postOrderTraverseTree());
                     break;
                 case 8:
                     //объединение двух поддеревьев (рекурсивная форма)
@@ -107,6 +100,7 @@ public class Main {
                     break;
                 case 9:
                     //вывод структуры дерева
+                    System.out.println(bst.print());
                     break;
                 case 10:
                     //опрос числа просмотренных операцией узлов дерева
@@ -136,5 +130,19 @@ public class Main {
         }
     }
 
+    public static void randomFill(BinarySearchTree bst, int count){
+        bst.clearAllTree();
+        Random random = new Random();
+        for (int i = 0; i<count; i++) bst.addNode(random.nextInt(100));
+    }
+    public static void defaultFill(BinarySearchTree bst){
+        bst.clearAllTree();
+        bst.addNode(50);
+        bst.addNode(25);
+        bst.addNode(15);
+        bst.addNode(30);
+        bst.addNode(75);
+        bst.addNode(85);
+    }
 
 }
