@@ -23,31 +23,35 @@ public class Main {
         System.out.println("0 - Выход из программы");
     }
 
-    private static void pressAnyKeyToContinue() {
+/*    private static void pressAnyKeyToContinue() {
         System.out.println("Нажмите Enter, чтобы вернуться в меню.");
         try {
             System.in.read();
         } catch (Exception e) {
         }
-    }
+    }*/
 
     private static int scanInt(Scanner menu) {
         while (!menu.hasNextInt()) menu.next();
         return menu.nextInt();
     }
 
-    public static <T> void main(String[] args) {
-        BinarySearchTree bst = new BinarySearchTree();
+    public static void main(String[] args) {
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 
-        bst.addNode(50, "Boss");
-        bst.addNode(25, "Vice Pres");
-        bst.addNode(15, "Office Manager");
-        bst.addNode(30, "Secretary");
-        bst.addNode(75, "Sales Manager");
-        bst.addNode(85, "Salesman");
+        bst.addNode(20);
+        bst.addNode(10);
+        bst.addNode(30);
+        bst.addNode(25);
+        bst.addNode(100);
+
+        BinarySearchTree<Integer> bst2 = new BinarySearchTree<>();
+
+        bst2.addNode(50);
+        bst2.addNode(5);
+        bst2.addNode(70);
 
         Scanner menu = new Scanner(System.in);
-        BSTIterator iterator = new BSTIterator(bst.root);
 
         while (true) {
             showMenu();
@@ -66,29 +70,22 @@ public class Main {
                     break;
                 case 3:
                     //проверка дерева на пустоту
-                    if (bst.isEmpty()) System.out.println("Дерево пустое.");
-                    else System.out.println("Дерево не пустое.");
+                    System.out.println("Дерево " + (bst.isEmpty() ? "" : "не ") + "пустое.");
                     break;
                 case 4:
                     //поиск элемента с заданным ключом
                     System.out.print("Введите ключ: ");
-                    Node find = bst.findNode(scanInt(menu));
-                    if (find == null)
-                        System.out.println("Элемент с заданным ключом не найден.");
-                    else
-                        System.out.println("Элемент с заданным ключом найден. Данные элемента: " + find.data.toString());
+                    System.out.println("Элемент с заданным ключом " + (bst.findNode(scanInt(menu)) == null ? "не " : "") + "найден.");
                     break;
                 case 5:
                     //включение нового элемента с заданным ключом
                     System.out.print("Введите ключ: ");
                     int key = scanInt(menu);
                     if (bst.findNode(key) == null) {
-                        System.out.print("Введите данные: ");
-                        String data = menu.next();
-                        bst.addNode(key, data);
-                    } else {
-                        System.out.println("Элемент с заданным ключом уже присутствует в дереве.");
-                    }
+                        bst.addNode(key);
+                        System.out.println("Элемент успешно добавлен.");
+                    } else System.out.println("Элемент с заданным ключом уже присутствует в дереве.");
+
                     break;
                 case 6:
                     //удаление элемента с заданным ключом
@@ -104,6 +101,9 @@ public class Main {
                     break;
                 case 8:
                     //объединение двух поддеревьев (рекурсивная форма)
+                    BinarySearchTree bst3 = new BinarySearchTree();
+                    bst3.merge(bst.root,bst2.root);
+                    bst3.postOrderTraverseTree();
                     break;
                 case 9:
                     //вывод структуры дерева
@@ -117,12 +117,9 @@ public class Main {
                     break;
                 case 12:
                     //проверка конца дерева
-                    if (iterator.hasNext()) System.out.println("Конец дерева не достигнут.");
-                    else System.out.println("Конец дерева достигнут.");
                     break;
                 case 13:
                     //доступ к данным текущего элемента дерева
-                    System.out.println(iterator.currentData());
                     break;
                 case 14:
                     //переход к следующему по значению ключа элементу дерева
@@ -135,7 +132,7 @@ public class Main {
                 default:
                     break;
             }
-            pressAnyKeyToContinue();
+            //pressAnyKeyToContinue();
         }
     }
 

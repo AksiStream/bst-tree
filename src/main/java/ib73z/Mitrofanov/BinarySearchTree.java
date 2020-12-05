@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class BinarySearchTree {
+public class BinarySearchTree <T extends Comparable> {
 
     Node root;
 
@@ -47,10 +47,10 @@ public class BinarySearchTree {
     }
 
     //поиск элемента с заданным ключом
-    public Node findNode(int key) {
+    public Node findNode(T key) {
         Node node = root;
         while (node.key != key) {
-            if (key < node.key) {
+            if (key.compareTo(node.key)==-1) {
                 node = node.left;
             } else {
                 node = node.right;
@@ -61,15 +61,15 @@ public class BinarySearchTree {
     }
 
     //включение нового элемента с заданным ключом
-    public <T> void addNode(int key, T data) {
-        Node newNode = new Node(key, data);
+    public void addNode(T key) {
+        Node newNode = new Node(key);
         if (root == null) root = newNode;
         else {
             Node node = root;
             Node parent;
             while (true) {
                 parent = node;
-                if (key < node.key) {
+                if (key.compareTo(node.key)==-1) {
                     node = node.left;
                     if (node == null) {
                         parent.left = newNode;
@@ -87,15 +87,15 @@ public class BinarySearchTree {
     }
 
     //удаление элемента с заданным ключом
-    public boolean removeNode(int key) {
+    public boolean removeNode(T key) {
         Node node = root;
         Node parent = root;
 
         boolean isLeft = true;
 
-        while (node.key != key) {
+        while (!node.key.equals(key)) {
             parent = node;
-            if (key < node.key) {
+            if (key.compareTo(node.key)==-1) {
                 isLeft = true;
                 node = node.left;
             } else {
@@ -166,6 +166,77 @@ public class BinarySearchTree {
 
     //вывод структуры дерева на экран
 
+
+    //объединение двух поддеревьев (рекурсивная форма)
+    public Node push(Node root, Node head)
+    {
+        // insert the given node at the front of the DDL
+        root.right = head;
+
+        // update the left pointer of the existing head node of the DDL
+        // to point to the BST node
+        if (head != null) {
+            head.left = root;
+        }
+
+        // update the head pointer of DDL
+        head = root;
+        return head;
+    }
+    public Node convertBSTtoDLL(Node root, Node head)
+    {
+        // Base case
+        if (root == null) {
+            return head;
+        }
+
+        // recursively convert the right subtree a
+        head = convertBSTtoDLL(root.right, head);
+
+        // push current node at the front of the doubly linked list
+        head = push(root, head);
+
+        // recursively convert the left subtree
+        head = convertBSTtoDLL(root.left, head);
+
+        return head;
+    }
+    public Node mergeDDLs(Node a, Node b)
+    {
+        // if the first list is empty, return the second list
+        if (a == null) {
+            return b;
+        }
+
+        // if the second list is empty, return the first list
+        if (b == null) {
+            return a;
+        }
+
+        // if head node of the first list is smaller
+        if (a.key.compareTo(b.key)==-1) {
+            a.right = mergeDDLs(a.right, b);
+            a.right.left = a;
+            return a;
+        }
+
+        // if head node of the second list is smaller
+        else {
+            b.right = mergeDDLs(a, b.right);
+            b.right.left = b;
+            return b;
+        }
+    }
+    public Node merge(Node a, Node b)
+    {
+        Node first = null;
+        first = convertBSTtoDLL(a, first);
+
+        Node second = null;
+        second = convertBSTtoDLL(b, second);
+
+        return mergeDDLs(first, second);
+    }
 
 }
 
