@@ -4,16 +4,16 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class BinarySearchTree<T extends Comparable> {
+public class BinarySearchTree<T extends Comparable<T>> {
 
-    Node root;
+    Node<T> root;
 
     //опрос размера дерева
     public int getSize() {
-        Node node = root;
+        Node<T> node = root;
         int count = 0;
         if (node == null) return count;
-        Stack<Node> sizeStack = new Stack();
+        Stack<Node<T>> sizeStack = new Stack<>();
         sizeStack.push(node);
         while (!sizeStack.isEmpty()) {
             node = sizeStack.pop();
@@ -31,10 +31,10 @@ public class BinarySearchTree<T extends Comparable> {
     //очистка дерева
     public void clearAllTree() {
         if (root == null) return;
-        Queue<Node> q = new LinkedList<>();
+        Queue<Node<T>> q = new LinkedList<>();
         q.add(root);
         while (!q.isEmpty()) {
-            Node node = q.poll();
+            Node<T> node = q.poll();
             if (node.left != null) q.add(node.left);
             if (node.right != null) q.add(node.right);
         }
@@ -47,10 +47,11 @@ public class BinarySearchTree<T extends Comparable> {
     }
 
     //поиск элемента с заданным ключом
-    public Node findNode(T key) {
-        Node node = root;
+    public Node<T> findNode(T key) {
+        if (isEmpty()) return null;
+        Node<T> node = root;
         while (node.key != key) {
-            if (key.compareTo(node.key) == -1) {
+            if (key.compareTo(node.key) < 0) {
                 node = node.left;
             } else {
                 node = node.right;
@@ -62,15 +63,14 @@ public class BinarySearchTree<T extends Comparable> {
 
     //включение нового элемента с заданным ключом
     public void addNode(T key) {
-        Node newNode = new Node(key);
+        Node<T> newNode = new Node<>(key);
         if (root == null) root = newNode;
         else {
-            Node node = root;
-            Node parent;
+            Node<T> node = root;
+            Node<T> parent;
             while (true) {
-                newNode.height++;
                 parent = node;
-                if (key.compareTo(node.key) == -1) {
+                if (key.compareTo(node.key) < 0) {
                     node = node.left;
                     if (node == null) {
                         parent.left = newNode;
@@ -88,69 +88,93 @@ public class BinarySearchTree<T extends Comparable> {
     }
 
     //удаление элемента с заданным ключом
-    public boolean removeNode(T key) {
-        Node node = root;
-        Node parent = root;
-
-        boolean isLeft = true;
-
-        while (!node.key.equals(key)) {
-            parent = node;
-            if (key.compareTo(node.key) == -1) {
-                isLeft = true;
-                node = node.left;
+    public boolean removeNode(T value) {
+        Node<T> current = root;
+        Node<T> parent = root;
+        boolean isLeftChild = false;
+        while (current.key != value) {
+            parent = current;
+            if (value.compareTo(current.key) < 0) {
+                current = current.left;
+                isLeftChild = true;
             } else {
-                isLeft = false;
-                node = node.right;
+                current = current.right;
+                isLeftChild = false;
             }
-            if (node == null) return false;
-        }
-        if (node.left == null && node.right == null) {
-            if (node == root) {
-                root = null;
-            } else if (isLeft) {
-                parent.left = null;
-            } else parent.right = null;
-        } else if (node.right == null) {
-            if (node == root) root = node.left;
-            else if (isLeft) parent.left = node.left;
-            else parent.right = node.left;
-        } else if (node.left == null) {
-            if (node == root) root = node.right;
-            else if (isLeft) parent.left = node.right;
-            else parent.right = null;
-        } else {
-            Node replacement = getReplacementNode(node);
-            if (node == root) root = replacement;
-            else if (isLeft) parent.left = replacement;
-            else parent.right = replacement;
-            replacement.left = node.left;
+            if (current == null) {
+                return false;
+            }
         }
 
+        //случай удаления листа
+        if (current.left == null && current.right == null) {
+            if (current == root) {
+                root = null;
+            } else if (isLeftChild) {
+                parent.left = null;
+            } else {
+                parent.right = null;
+            }
+        }
+        //удаление ноды-родителя
+        //правый потомок
+        else if (current.left == null) {
+            // if root node is to be deleted
+            if (current == root) {
+                root = current.right;
+            } else if (isLeftChild) {
+                parent.left = current.right;
+            } else {
+                parent.right = current.right;
+            }
+        }
+        //левый потомок
+        else if (current.right == null) {
+            if (current == root) {
+                root = current.left;
+            } else if (isLeftChild) {
+                parent.left = current.left;
+            } else {
+                parent.right = current.left;
+            }
+        }
+        //оба потомка
+        else {
+            Node<T> successor = findSuccessor(current);
+            if (current == root) {
+                root = successor;
+            } else if (isLeftChild) {
+                parent.left = successor;
+            } else {
+                parent.right = successor;
+            }
+            successor.left = current.left;
+        }
         return true;
     }
 
-    public Node getReplacementNode(Node replacedNode) {
-        Node replacementParent = replacedNode;
-        Node replacement = replacedNode;
-        Node node = replacedNode.right;
-        while (node != null) {
-            replacementParent = replacement;
-            replacement = node;
-            node = node.left;
+    //метод для поиска следующего по порядку элемента
+    private Node<T> findSuccessor(Node<T> node) {
+        Node<T> successor = node;
+        Node<T> successorParent = node;
+        Node<T> current = node.right;
+        while (current != null) {
+            successorParent = successor;
+            successor = current;
+            current = current.left;
         }
-        if (replacement != replacedNode.right) {
-            replacementParent.left = replacement.right;
-            replacement.right = replacedNode.right;
+        if (successor != node.right) {
+            successorParent.left = successor.right;
+            successor.right = node.right;
         }
-        return replacement;
+        return successor;
     }
 
     //обход дерева по схеме LRN (обратный обход)
-    public Stack postOrderTraverseTree() {
-        Stack<Node> postOrder = new Stack<>();
-        Node node = root;
-        Stack<Node> stack = new Stack<>();
+    public Stack<Node<T>> postOrderTraverseTree() {
+        Stack<Node<T>> postOrder = new Stack<>();
+        Node<T> node = root;
+        Stack<Node<T>> stack = new Stack<>();
         while (true) {
             while (node != null) {
                 stack.push(node);
@@ -169,96 +193,14 @@ public class BinarySearchTree<T extends Comparable> {
     }
 
     //вывод структуры дерева на экран
-    public String print() {
-        if (isEmpty()) {
-            return "Дерево пустое.";
-        }
-        StringBuilder sb = new StringBuilder();
-        Stack<Node> postOrder = postOrderTraverseTree();
-
-        sb.append(postOrder.pop());
-        sb.append("\n");
-
-        while (!postOrder.isEmpty()) {
-            for (int i = 0; i < postOrder.peek().height-1; i++)
-                sb.append("   ");
-            sb.append("└──");
-            sb.append(postOrder.pop());
-            sb.append("\n");
-        }
-
-        return sb.toString();
+    public void print() {
+        TreePrinter<T> printer = new TreePrinter<>();
+        printer.print(root);
     }
 
     //объединение двух поддеревьев (рекурсивная форма)
-    public Node push(Node root, Node head) {
-        // insert the given node at the front of the DDL
-        root.right = head;
 
-        // update the left pointer of the existing head node of the DDL
-        // to point to the BST node
-        if (head != null) {
-            head.left = root;
-        }
 
-        // update the head pointer of DDL
-        head = root;
-        return head;
-    }
-
-    public Node convertBSTtoDLL(Node root, Node head) {
-        // Base case
-        if (root == null) {
-            return head;
-        }
-
-        // recursively convert the right subtree a
-        head = convertBSTtoDLL(root.right, head);
-
-        // push current node at the front of the doubly linked list
-        head = push(root, head);
-
-        // recursively convert the left subtree
-        head = convertBSTtoDLL(root.left, head);
-
-        return head;
-    }
-
-    public Node mergeDDLs(Node a, Node b) {
-        // if the first list is empty, return the second list
-        if (a == null) {
-            return b;
-        }
-
-        // if the second list is empty, return the first list
-        if (b == null) {
-            return a;
-        }
-
-        // if head node of the first list is smaller
-        if (a.key.compareTo(b.key) == -1) {
-            a.right = mergeDDLs(a.right, b);
-            a.right.left = a;
-            return a;
-        }
-
-        // if head node of the second list is smaller
-        else {
-            b.right = mergeDDLs(a, b.right);
-            b.right.left = b;
-            return b;
-        }
-    }
-
-    public Node merge(Node a, Node b) {
-        Node first = null;
-        first = convertBSTtoDLL(a, first);
-
-        Node second = null;
-        second = convertBSTtoDLL(b, second);
-
-        return mergeDDLs(first, second);
-    }
 
 }
 

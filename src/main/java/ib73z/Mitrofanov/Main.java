@@ -3,53 +3,29 @@ package ib73z.Mitrofanov;
 import java.util.Random;
 import java.util.Scanner;
 
+
+
 public class Main {
 
-    private static void showMenu() {
-        System.out.println("1 - Опрос размера дерева");
-        System.out.println("2 - Очистка дерева");
-        System.out.println("3 - Проверка дерева на пустоту");
-        System.out.println("4 - Поиск элемента с заданным ключом");
-        System.out.println("5 - Включение нового элемента с заданным ключом");
-        System.out.println("6 - Удаление элемента с заданным ключом");
-        System.out.println("7 - Обход дерева по схеме LRN (обратный обход):");
-        System.out.println("8 - Объединение двух поддеревьев (рекурсивная форма)");
-        System.out.println("9 - Вывод структуры дерева на экран");
-        System.out.println("10 - Опрос числа просмотренных операцией узлов дерева");
-        System.out.println("11 - Установка на корень дерева");
-        System.out.println("12 - Проверка конца дерева");
-        System.out.println("13 - Доступ к данным текущего элемента дерева");
-        System.out.println("14 - Переход к следующему по значению ключа элементу дерева");
-        System.out.println("15 - Переход к предыдущему по значению ключа элементу дерева");
-        System.out.println("0 - Выход из программы");
-    }
-
-/*    private static void pressAnyKeyToContinue() {
-        System.out.println("Нажмите Enter, чтобы вернуться в меню.");
-        try {
-            System.in.read();
-        } catch (Exception e) {
-        }
-    }*/
-
+    final private static int size = 20;
     private static int scanInt(Scanner menu) {
         while (!menu.hasNextInt()) menu.next();
         return menu.nextInt();
     }
 
     public static void main(String[] args) {
+        System.out.println("??????????? ?????? ?? ???????. ??????? 8. ???????? ?????????? ?.?., ?????? ??-73?, ?1710098.");
+
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        //BinarySearchTree<Integer> bst2 = new BinarySearchTree<>();
 
-        randomFill(bst, 20);
-
-        BinarySearchTree<Integer> bst2 = new BinarySearchTree<>();
-
-        defaultFill(bst2);
+        randomFill(bst, size);
+        //defaultFill(bst2);
 
         Scanner menu = new Scanner(System.in);
 
         while (true) {
-            showMenu();
+            System.out.println(Menu.show());
             switch (scanInt(menu)) {
                 case 0:
                     //выход из программы
@@ -94,13 +70,11 @@ public class Main {
                     break;
                 case 8:
                     //объединение двух поддеревьев (рекурсивная форма)
-                    BinarySearchTree bst3 = new BinarySearchTree();
-                    bst3.merge(bst.root,bst2.root);
-                    bst3.postOrderTraverseTree();
+
                     break;
                 case 9:
                     //вывод структуры дерева
-                    System.out.println(bst.print());
+                    bst.print();
                     break;
                 case 10:
                     //опрос числа просмотренных операцией узлов дерева
@@ -126,17 +100,21 @@ public class Main {
                 default:
                     break;
             }
-            //pressAnyKeyToContinue();
         }
     }
 
-    public static void randomFill(BinarySearchTree bst, int count){
-        bst.clearAllTree();
+    public static void randomFill(BinarySearchTree<Integer> bst, int count) {
         Random random = new Random();
-        for (int i = 0; i<count; i++) bst.addNode(random.nextInt(100));
+        for (int i = 0; i < count; i++) {
+            int tempKey = random.nextInt(size);
+            while (bst.findNode(tempKey) != null) {
+                tempKey = random.nextInt(size);
+            }
+            bst.addNode(tempKey);
+        }
     }
-    public static void defaultFill(BinarySearchTree bst){
-        bst.clearAllTree();
+
+    public static void defaultFill(BinarySearchTree<Integer> bst) {
         bst.addNode(50);
         bst.addNode(25);
         bst.addNode(15);

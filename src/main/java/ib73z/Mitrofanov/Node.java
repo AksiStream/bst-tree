@@ -1,9 +1,8 @@
 package ib73z.Mitrofanov;
 
-class Node<T extends Comparable> {
+class Node<T> {
     T key;
-    int height = 0;
-    Node left, right;
+    Node<T> left, right;
 
     Node(T key) {
         this.key = key;
