@@ -74,12 +74,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
                     node = node.left;
                     if (node == null) {
                         parent.left = newNode;
+                        newNode.parent = parent;
                         return;
                     }
                 } else {
                     node = node.right;
                     if (node == null) {
                         parent.right = newNode;
+                        newNode.parent = parent;
                         return;
                     }
                 }

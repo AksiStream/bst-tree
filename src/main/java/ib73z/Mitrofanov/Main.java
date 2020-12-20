@@ -17,10 +17,10 @@ public class Main {
 
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
         BinarySearchTree<Integer> bst2 = new BinarySearchTree<>();
-
         randomFill(bst, 5, 10, 20);
         randomFill(bst2, 5, 15, 25);
 
+        Iterator<Integer> iterator = new Iterator<>(bst);
         Scanner menu = new Scanner(System.in);
 
         while (true) {
@@ -85,25 +85,39 @@ public class Main {
                     bst.print();
                     break;
                 case 10:
-                    //опрос числа просмотренных операцией узлов дерева
+                    //установка на корень дерева
+                    iterator.root();
+                    System.out.println("Итератор установлен на корень дерева.");
+                    System.out.print("Его значение: ");
+                    System.out.println(iterator.get());
                     break;
                 case 11:
-                    //установка на корень дерева
-
+                    //проверка конца дерева
+                    if (iterator.hasNext()) System.out.println("Конец дерева не достигнут.");
+                    else System.out.println("Конец дерева достигнут.");
                     break;
                 case 12:
-                    //проверка конца дерева
+                    //доступ к данным текущего элемента дерева
+                    System.out.print("Текущий элемент: ");
+                    System.out.println(iterator.get());
                     break;
                 case 13:
-                    //доступ к данным текущего элемента дерева
+                    //переход к следующему по значению ключа элементу дерева
+                    if (iterator.hasNext()) {
+                        iterator.next();
+                        System.out.println("Итератор перешел к следующему по значению элементу дерева.");
+                        System.out.print("Его значение: ");
+                        System.out.println(iterator.get());
+                    } else System.out.println("Конец дерева достигнут.");
                     break;
                 case 14:
-                    //переход к следующему по значению ключа элементу дерева
-
-                    break;
-                case 15:
                     //переход к предыдущему по значению ключа элементу дерева
-
+                    if (iterator.hasPrev()) {
+                        iterator.prev();
+                        System.out.println("Итератор перешел к предыдущему по значению элементу дерева.");
+                        System.out.print("Его значение: ");
+                        System.out.println(iterator.get());
+                    } else System.out.println("Начало дерева достигнуто.");
                     break;
                 default:
                     break;
@@ -115,21 +129,12 @@ public class Main {
         int range = max - min;
         Random random = new Random();
         for (int i = 0; i < count; i++) {
-            int tempKey = random.nextInt(range)+min;
+            int tempKey = random.nextInt(range) + min;
             while (bst.findNode(tempKey) != null) {
-                tempKey = random.nextInt(range)+min;
+                tempKey = random.nextInt(range) + min;
             }
             bst.addNode(tempKey);
         }
-    }
-
-    public static void defaultFill(BinarySearchTree<Integer> bst) {
-        bst.addNode(50);
-        bst.addNode(25);
-        bst.addNode(15);
-        bst.addNode(30);
-        bst.addNode(75);
-        bst.addNode(85);
     }
 
 }
