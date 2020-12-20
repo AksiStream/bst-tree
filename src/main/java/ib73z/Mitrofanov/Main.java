@@ -4,10 +4,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 
-
 public class Main {
 
-    final private static int size = 20;
+
     private static int scanInt(Scanner menu) {
         while (!menu.hasNextInt()) menu.next();
         return menu.nextInt();
@@ -17,10 +16,10 @@ public class Main {
         System.out.println("Контрольная работа по САОДИСС. Вариант №8. Митрофанов И.С., группа ИБ-73з, №1710098.");
 
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-        //BinarySearchTree<Integer> bst2 = new BinarySearchTree<>();
+        BinarySearchTree<Integer> bst2 = new BinarySearchTree<>();
 
-        randomFill(bst, size);
-        //defaultFill(bst2);
+        randomFill(bst, 5, 10, 20);
+        randomFill(bst2, 5, 15, 25);
 
         Scanner menu = new Scanner(System.in);
 
@@ -70,7 +69,16 @@ public class Main {
                     break;
                 case 8:
                     //объединение двух поддеревьев (рекурсивная форма)
-
+                    System.out.println("Объединение двух поддеревьев.");
+                    System.out.println("Первое дерево:");
+                    bst.print();
+                    System.out.println("Второе дерево:");
+                    bst2.print();
+                    BinarySearchTree<Integer> unionTree = new BinarySearchTree<>();
+                    unionTree.union(bst);
+                    unionTree.union(bst2);
+                    System.out.println("Результат объединения:");
+                    unionTree.print();
                     break;
                 case 9:
                     //вывод структуры дерева
@@ -103,12 +111,13 @@ public class Main {
         }
     }
 
-    public static void randomFill(BinarySearchTree<Integer> bst, int count) {
+    public static void randomFill(BinarySearchTree<Integer> bst, int count, int min, int max) {
+        int range = max - min;
         Random random = new Random();
         for (int i = 0; i < count; i++) {
-            int tempKey = random.nextInt(size);
+            int tempKey = random.nextInt(range)+min;
             while (bst.findNode(tempKey) != null) {
-                tempKey = random.nextInt(size);
+                tempKey = random.nextInt(range)+min;
             }
             bst.addNode(tempKey);
         }

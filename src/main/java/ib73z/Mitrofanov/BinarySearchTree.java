@@ -198,7 +198,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     //объединение двух поддеревьев (рекурсивная форма)
-
+    public void union(BinarySearchTree<T> other) {
+        Stack<Node<T>> stack = other.postOrderTraverseTree();
+        while (!stack.isEmpty()) {
+            Node<T> node = stack.pop();
+            if (findNode(node.key) == null)
+                addNode(node.key);
+        }
+    }
 
 
 }
