@@ -51,7 +51,7 @@ public class TreePrinter <T extends Comparable<T>>{
             next.clear();
         }
 
-        int perpiece = lines.get(lines.size() - 1).size() * (widest + 4);
+        int perpiece = lines.get(lines.size() - 1).size() * (widest + 1);
         for (int i = 0; i < lines.size(); i++) {
             List<String> line = lines.get(i);
             int hpw = (int) Math.floor(perpiece / 2f) - 1;
@@ -60,10 +60,10 @@ public class TreePrinter <T extends Comparable<T>>{
                 for (int j = 0; j < line.size(); j++) {
 
                     // split node
-                    char c = ' ';
+                    String c = " ";
                     if (j % 2 == 1) {
-                        if (line.get(j - 1) != null) c = (line.get(j) != null) ? '┴' : '┘';
-                        else if (line.get(j) != null) c = '└';
+                        if (line.get(j - 1) != null) c = (line.get(j) != null) ? "┴" : "┘";
+                        else if (line.get(j) != null) c = "└";
                     }
                     System.out.print(c);
 

@@ -188,7 +188,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
                 postOrder.push(node);
                 node = null;
             }
-
         }
     }
 
