@@ -8,6 +8,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     Node<T> root;
 
+
     //опрос размера дерева
     public int getSize() {
         Node<T> node = root;
@@ -199,7 +200,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         printer.print(root);
     }
 
-    //объединение двух поддеревьев (рекурсивная форма)
+    //объединение двух поддеревьев
     public void union(BinarySearchTree<T> other) {
         Stack<Node<T>> stack = other.postOrderTraverseTree();
         while (!stack.isEmpty()) {

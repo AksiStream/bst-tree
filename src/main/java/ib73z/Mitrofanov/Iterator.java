@@ -7,7 +7,6 @@ public class Iterator<T extends Comparable<T>> {
 
     public Iterator(BinarySearchTree<T> bst) {
         this.root = bst.root;
-        findMinimal();
     }
 
     public void findMinimal() {

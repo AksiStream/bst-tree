@@ -17,11 +17,11 @@ public class Main {
 
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
         BinarySearchTree<Integer> bst2 = new BinarySearchTree<>();
-        randomFill(bst, 5, 10, 20);
-        randomFill(bst2, 5, 15, 25);
+        randomFill(bst, 10, 10, 70);
+        randomFill(bst2, 10, 40, 99);
 
-        Iterator<Integer> iterator = new Iterator<>(bst);
         Scanner menu = new Scanner(System.in);
+        Iterator<Integer> iterator = new Iterator<>(bst);
 
         while (true) {
             System.out.println(Menu.show());
@@ -136,5 +136,4 @@ public class Main {
             bst.addNode(tempKey);
         }
     }
-
 }

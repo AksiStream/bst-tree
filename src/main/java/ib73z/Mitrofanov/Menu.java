@@ -13,7 +13,7 @@ public class Menu {
             "Включение нового элемента с заданным ключом",
             "Удаление элемента с заданным ключом",
             "Обход дерева по схеме LRN (обратный обход):",
-            "Объединение двух поддеревьев (рекурсивная форма)",
+            "Объединение двух поддеревьев",
             "Вывод структуры дерева на экран",
             "Установка на корень дерева",
             "Проверка конца дерева",
@@ -24,7 +24,7 @@ public class Menu {
 
     public static String show() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i<menu.size(); i++){
+        for (int i = 0; i < menu.size(); i++) {
             sb.append(i).append(" - ").append(menu.get(i)).append("\n");
         }
         return sb.toString();

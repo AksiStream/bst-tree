@@ -3,10 +3,9 @@ package ib73z.Mitrofanov;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreePrinter <T extends Comparable<T>>{
+public class TreePrinter<T extends Comparable<T>> {
 
-    public void print(Node<T> root)
-    {
+    public void print(Node<T> root) {
         List<List<String>> lines = new ArrayList<>();
 
         List<Node<T>> level = new ArrayList<>();
@@ -59,7 +58,6 @@ public class TreePrinter <T extends Comparable<T>>{
             if (i > 0) {
                 for (int j = 0; j < line.size(); j++) {
 
-                    // split node
                     String c = " ";
                     if (j % 2 == 1) {
                         if (line.get(j - 1) != null) c = (line.get(j) != null) ? "┴" : "┘";
@@ -67,7 +65,6 @@ public class TreePrinter <T extends Comparable<T>>{
                     }
                     System.out.print(c);
 
-                    // lines and spaces
                     if (line.get(j) == null) {
                         for (int k = 0; k < piece - 1; k++) {
                             System.out.print(" ");
@@ -93,7 +90,6 @@ public class TreePrinter <T extends Comparable<T>>{
                 int gap1 = (int) Math.ceil(a);
                 int gap2 = (int) Math.floor(a);
 
-                // a number
                 for (int k = 0; k < gap1; k++) {
                     System.out.print(" ");
                 }
